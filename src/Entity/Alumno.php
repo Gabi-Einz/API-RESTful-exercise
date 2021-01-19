@@ -29,6 +29,11 @@ class Alumno
      */
     private $cursos;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $legajo;
+
     public function __construct()
     {
         $this->cursos = new ArrayCollection();
@@ -74,6 +79,18 @@ class Alumno
         if ($this->cursos->removeElement($curso)) {
             $curso->removeAlumno($this);
         }
+
+        return $this;
+    }
+
+    public function getLegajo(): ?int
+    {
+        return $this->legajo;
+    }
+
+    public function setLegajo(int $legajo): self
+    {
+        $this->legajo = $legajo;
 
         return $this;
     }
