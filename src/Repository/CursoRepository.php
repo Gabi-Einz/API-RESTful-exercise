@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Curso;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,37 +15,40 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CursoRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    var EntityManagerInterface $entityManagerInterface; 
+
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManagerInterface)
     {
         parent::__construct($registry, Curso::class);
+        $this->entityManagerInterface = $entityManagerInterface;
     }
 
-    // /**
-    //  * @return Curso[] Returns an array of Curso objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+    public function createCurso($curso)
+    {      
+        $this->entityManagerInterface->persist($curso);
+        $this->entityManagerInterface->flush($curso);
 
-    /*
-    public function findOneBySomeField($value): ?Curso
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
     }
-    */
+
+    public function getCursos()
+    {
+        
+        return $this->findAll();
+    }
+
+    public function getCursoById($id)
+    {
+        return $this->find($id);
+    }
+
+    public function deleteCurso($curso)
+    {
+        $this->entityManagerInterface->remove($curso);
+        $this->entityManagerInterface->flush();
+    }
+
+    public function editCurso($cursoBd)
+    {
+        $this->entityManagerInterface->flush($cursoBd);
+    }
 }

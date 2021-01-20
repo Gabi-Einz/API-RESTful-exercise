@@ -18,7 +18,7 @@ class AlumnoService{
     {
         $this->alumnoRepository->createAlumno($alumno);
 
-        return $alumno->getLegajo();
+        return $alumno->getId();
     }
     
     public function getAlumnos()

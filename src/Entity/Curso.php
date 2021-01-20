@@ -25,11 +25,6 @@ class Curso
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $fechaInscripcion;
-
-    /**
      * @ORM\Column(type="integer")
      */
     private $cantAlumnos;
@@ -40,13 +35,13 @@ class Curso
     private $alumnos;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Profesor::class, inversedBy="cursos")
+     * @ORM\ManyToOne(targetEntity=Profesor::class, inversedBy="cursos", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $profesor;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Materia::class)
+     * @ORM\ManyToOne(targetEntity=Materia::class, cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $materia;
@@ -74,18 +69,6 @@ class Curso
         return $this;
     }
 
-    public function getFechaInscripcion(): ?string
-    {
-        return $this->fechaInscripcion;
-    }
-
-    public function setFechaInscripcion(?string $fechaInscripcion): self
-    {
-        $this->fechaInscripcion = $fechaInscripcion;
-
-        return $this;
-    }
-
     /**
      * @return Collection|Alumno[]
      */
@@ -98,6 +81,7 @@ class Curso
     {
         if (!$this->alumnos->contains($alumno)) {
             $this->alumnos[] = $alumno;
+            $this->cantAlumnos = count($this->alumnos);
         }
 
         return $this;
@@ -106,6 +90,7 @@ class Curso
     public function removeAlumno(Alumno $alumno): self
     {
         $this->alumnos->removeElement($alumno);
+        $this->cantAlumnos = count($this->alumnos);
 
         return $this;
     }

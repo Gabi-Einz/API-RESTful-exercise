@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\Alumno; //SOLUCION SEEEEEEEEEE
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer; //Lo uso para preparar la respuesta del GET al cliente
 
 class AlumnoController extends AbstractController
@@ -43,27 +44,37 @@ class AlumnoController extends AbstractController
            throw new Exception("Ha ocurrido un error, logica de datos JSON invalido: " . (string) $errors);
         }
 
-        (int) $legajo = $alumnoService->createAlumno($alumno);//llamo al servicio 
+        (int) $id = $alumnoService->createAlumno($alumno);//llamo al servicio 
         
-        return new JsonResponse($legajo);//envio respuesta
+        return new JsonResponse($id);//envio respuesta
     }
     
     /**
      *      
      * @Route("/alumnos", methods={"GET"})
      */
-    public function getAlumnos(AlumnoService $alumnoService, LoggerInterface $logger)
+    public function getAlumnos(AlumnoService $alumnoService, LoggerInterface $logger, SerializerInterface $serializer)
     {
 
         $logger->info("Estoy en getAlumnos()");
 
         (object) $alumnos = $alumnoService->getAlumnos();
 
-        $response =  $this->json($alumnos, 200, [], [
-            AbstractNormalizer::IGNORED_ATTRIBUTES => ['__initializer__', '__cloner__', '__isInitialized__'],
-        ]);
+        // $response =  $this->json($alumnos, 200, [], [
+        //     AbstractNormalizer::IGNORED_ATTRIBUTES => ['__initializer__', '__cloner__', '__isInitialized__'],
+        // ]);
 
-        return $response;
+        // return $response;
+
+        // Serialize tu object en Json
+        $jsonObject = $serializer->serialize($alumnos, 'json', [
+            'circular_reference_handler' => function ($object) {
+            return $object->getId();
+           }
+           ]);
+
+       
+       return new Response($jsonObject, 200, ['Content-Type' => 'application/json']);
 
     }
 

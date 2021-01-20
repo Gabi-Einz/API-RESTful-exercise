@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Profesor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,9 +15,17 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProfesorRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    var EntityManagerInterface $entityManagerInterface;
+
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManagerInterface)
     {
         parent::__construct($registry, Profesor::class);
+        $this->entityManagerInterface = $entityManagerInterface;
+    }
+
+    public function createProfesor($curso){
+         $this->entityManagerInterface->persist($curso->getProfesor());
+         $this->entityManagerInterface->flush($curso->getProfesor());
     }
 
     // /**

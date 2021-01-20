@@ -32,17 +32,18 @@ class AlumnoRepository extends ServiceEntityRepository
 
     }
 
-    public function getAlumnos(){
-        
+    public function getAlumnos()
+    {    
         return $this->findAll();
     }
     
+    /*
     public function getAlumnobyLegajo($legajo)
     {
         $field = 'legajo';
         $alumno = $this->findOneBySomeField($legajo,$field);
         return $alumno;
-    }
+    }*/
 
     public function getAlumnoById($id)
     {
@@ -66,7 +67,7 @@ class AlumnoRepository extends ServiceEntityRepository
     }
     */
 
-    
+    /*
     public function findOneBySomeField($value, $field):Alumno
     {
         return $this->createQueryBuilder('a')
@@ -75,7 +76,7 @@ class AlumnoRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
         ;
-    }
+    }*/
 
     public function deleteAlumno($alumno)
     {

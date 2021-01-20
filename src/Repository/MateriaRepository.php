@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Materia;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,10 +15,19 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class MateriaRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+
+    var EntityManagerInterface $entityManagerInterface;
+
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManagerInterface)
     {
         parent::__construct($registry, Materia::class);
+        $this->entityManagerInterface = $entityManagerInterface;
     }
+
+    public function createMateria($curso){
+        $this->entityManagerInterface->persist($curso->getMateria());
+        $this->entityManagerInterface->flush($curso->getMateria());
+   }
 
     // /**
     //  * @return Materia[] Returns an array of Materia objects
