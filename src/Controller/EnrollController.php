@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class EnrollController extends AbstractController
 {
     /**
-     * @Route("/createEnroll/{idAlumno}/{idCurso}", name="createEnroll", methods={"POST"})
+     * @Route("/create_enroll/curso/{idCurso}/alumno/{idAlumno}", name="createEnroll", methods={"POST"})
      */
     public function createEnroll(int $idAlumno, int $idCurso,
                                  LoggerInterface $logger, AlumnoService $alumnoService, CursoService $cursoService,EnrollService $enrollService)
@@ -33,7 +33,7 @@ class EnrollController extends AbstractController
     }
 
     /**
-    * @Route("/deleteEnroll/{idAlumno}/{idCurso}", name="deleteEnroll", methods={"DELETE"})
+    * @Route("/delete_enroll/curso/{idCurso}/alumno/{idAlumno}", name="deleteEnroll", methods={"DELETE"})
     */
     public function deleteEnroll(int $idAlumno, int $idCurso,
                                  LoggerInterface $logger, AlumnoService $alumnoService, CursoService $cursoService,EnrollService $enrollService)

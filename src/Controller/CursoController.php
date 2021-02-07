@@ -66,14 +66,15 @@ class CursoController extends AbstractController
         // return $response;
 
         // Serialize tu object en Json
-        $jsonObject = $serializer->serialize($cursos, 'json', [
-             'circular_reference_handler' => function ($object) {
-             return $object->getId();
-            }
-            ]);
+        $jsonObject = $serializer->serialize($cursos, 'json', 
+        [
+            'circular_reference_handler' => function ($object) {return $object->getId();},
+           AbstractNormalizer::IGNORED_ATTRIBUTES => ['__initializer__', '__cloner__', '__isInitialized__']
+        ] //array asociativo
+        );
 
-        
-        return new Response($jsonObject, 200, ['Content-Type' => 'application/json']);
+       
+       return new Response($jsonObject, 200, ['Content-Type' => 'application/json']);
 
     }
 

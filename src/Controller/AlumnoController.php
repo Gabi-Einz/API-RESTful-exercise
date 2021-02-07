@@ -34,7 +34,7 @@ class AlumnoController extends AbstractController
         $logger->info('Capa de controlador: '.$data);
 
         try {//valido formato
-            (object) $alumno = $serializer->deserialize($data, Alumno::class,"json",[]);
+            (object) $alumno = $serializer->deserialize($data, Alumno::class,"json",[]); //hace llamados recursivos a los setters de todos las clases 
         } catch (\Throwable $th) {
             throw new Exception("Ha ocurrido un error, formato de datos JSON invalido: " . $th->getMessage());
         }
@@ -67,11 +67,12 @@ class AlumnoController extends AbstractController
         // return $response;
 
         // Serialize tu object en Json
-        $jsonObject = $serializer->serialize($alumnos, 'json', [
-            'circular_reference_handler' => function ($object) {
-            return $object->getId();
-           }
-           ]);
+        $jsonObject = $serializer->serialize($alumnos, 'json', 
+        [
+            'circular_reference_handler' => function ($object) {return $object->getId();},
+           AbstractNormalizer::IGNORED_ATTRIBUTES => ['__initializer__', '__cloner__', '__isInitialized__']
+        ] //array asociativo
+        );
 
        
        return new Response($jsonObject, 200, ['Content-Type' => 'application/json']);
@@ -81,17 +82,28 @@ class AlumnoController extends AbstractController
     /**
      * @Route("/alumno/{id}", methods={"GET"})
      */
-    public function getAlumno(AlumnoService $alumnoService, int $id, LoggerInterface $logger)
+    public function getAlumno(AlumnoService $alumnoService, int $id, LoggerInterface $logger,SerializerInterface $serializer)
     {
            $logger->info("Estoy en getAlumno!!!");
 
            $alumno = $alumnoService->getAlumno($id);
 
-           $response =  $this->json($alumno, 200, [], [
-            AbstractNormalizer::IGNORED_ATTRIBUTES => ['__initializer__', '__cloner__', '__isInitialized__'],
-        ]);
+        //    $response =  $this->json($alumno, 200, [], [
+        //     AbstractNormalizer::IGNORED_ATTRIBUTES => ['__initializer__', '__cloner__', '__isInitialized__'],
+        // ]);
 
-        return $response;  
+        // return $response;
+        // Serialize tu object en Json
+
+        $jsonObject = $serializer->serialize($alumno, 'json', 
+        [
+            'circular_reference_handler' => function ($object) {return $object->getId();},
+           AbstractNormalizer::IGNORED_ATTRIBUTES => ['__initializer__', '__cloner__', '__isInitialized__']
+        ] //array asociativo
+        );
+
+       
+       return new Response($jsonObject, 200, ['Content-Type' => 'application/json']);
     }
 
     /**
@@ -102,6 +114,10 @@ class AlumnoController extends AbstractController
         $logger->info("Estoy en deleteAlumno!!!");
 
         $alumno = $alumnoService->getAlumno($id);
+
+        // if(!$alumno){
+        //     throw new \Exception(message:'alumno no encontrado!');
+        // }
 
         $alumnoService->deleteAlumno($alumno);
         
