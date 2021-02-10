@@ -31,7 +31,7 @@ class AlumnoController extends AbstractController
     {
         $data = $request->getContent();
 
-        $logger->info('Capa de controlador: '.$data);
+        $logger->info('Capa de controlador: ' . $data);
 
         try {//valido formato
             (object) $alumno = $serializer->deserialize($data, Alumno::class,"json",[]); //hace llamados recursivos a los setters de todos las clases 
@@ -70,7 +70,7 @@ class AlumnoController extends AbstractController
         $jsonObject = $serializer->serialize($alumnos, 'json', 
         [
             'circular_reference_handler' => function ($object) {return $object->getId();},
-           AbstractNormalizer::IGNORED_ATTRIBUTES => ['__initializer__', '__cloner__', '__isInitialized__']
+           AbstractNormalizer::IGNORED_ATTRIBUTES => ['__initializer__', '__cloner__', '__isInitialized__','cursos']
         ] //array asociativo
         );
 
@@ -98,7 +98,7 @@ class AlumnoController extends AbstractController
         $jsonObject = $serializer->serialize($alumno, 'json', 
         [
             'circular_reference_handler' => function ($object) {return $object->getId();},
-           AbstractNormalizer::IGNORED_ATTRIBUTES => ['__initializer__', '__cloner__', '__isInitialized__']
+           AbstractNormalizer::IGNORED_ATTRIBUTES => ['__initializer__', '__cloner__', '__isInitialized__','alumnos']
         ] //array asociativo
         );
 
@@ -107,21 +107,15 @@ class AlumnoController extends AbstractController
     }
 
     /**
-     * @Route("/alumno/{id}", methods={"DELETE"})
+     * @Route("/alumno/{id_alumno}", methods={"DELETE"})
      */
-    public function deleteAlumno(AlumnoService $alumnoService, int $id, LoggerInterface $logger )
+    public function deleteAlumno(AlumnoService $alumnoService, int $id_alumno, LoggerInterface $logger )
     {
         $logger->info("Estoy en deleteAlumno!!!");
 
-        $alumno = $alumnoService->getAlumno($id);
-
-        // if(!$alumno){
-        //     throw new \Exception(message:'alumno no encontrado!');
-        // }
-
-        $alumnoService->deleteAlumno($alumno);
+        $alumnoService->deleteAlumno($id_alumno);
         
-        return new JsonResponse($id);
+        return new JsonResponse($id_alumno);
 
     }
 

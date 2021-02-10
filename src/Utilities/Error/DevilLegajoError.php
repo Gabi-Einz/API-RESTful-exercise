@@ -4,16 +4,16 @@ namespace App\Utilities\Error;
 
 use Error;
 
-class ServiceError extends Error{
+class DevilLegajoError extends Error{
     /**
      * @var int
      */
     private int $id;
 
-    public function __construct(string $message, int $id, int $codeHttp)
+    public function __construct()
     {
-        parent::__construct($message,$codeHttp);
-        $this->id = $id;
+        parent::__construct("Error, tu legajo le pertenece al diablo!",230);
+        $this->id = 2;
     }
 
     public function getId():int{

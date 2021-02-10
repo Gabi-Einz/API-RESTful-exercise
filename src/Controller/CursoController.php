@@ -69,7 +69,7 @@ class CursoController extends AbstractController
         $jsonObject = $serializer->serialize($cursos, 'json', 
         [
             'circular_reference_handler' => function ($object) {return $object->getId();},
-           AbstractNormalizer::IGNORED_ATTRIBUTES => ['__initializer__', '__cloner__', '__isInitialized__']
+           AbstractNormalizer::IGNORED_ATTRIBUTES => ['__initializer__', '__cloner__', '__isInitialized__','alumnos','cursos']
         ] //array asociativo
         );
 
@@ -81,17 +81,21 @@ class CursoController extends AbstractController
     /**
      * @Route("/curso/{id}", methods={"GET"})
      */
-    public function getCurso(CursoService $cursoService, int $id, LoggerInterface $logger)
+    public function getCurso(CursoService $cursoService, int $id, LoggerInterface $logger,SerializerInterface $serializer)
     {
            $logger->info("Estoy en getCurso!!!");
 
            $curso = $cursoService->getCurso($id);
 
-           $response =  $this->json($curso, 200, [], [
-            AbstractNormalizer::IGNORED_ATTRIBUTES => ['__initializer__', '__cloner__', '__isInitialized__'],
-        ]);
-
-        return $response;  
+           $jsonObject = $serializer->serialize($curso, 'json', 
+           [
+               'circular_reference_handler' => function ($object) {return $object->getId();},
+              AbstractNormalizer::IGNORED_ATTRIBUTES => ['__initializer__', '__cloner__', '__isInitialized__','cursos']
+           ] //array asociativo
+           );
+   
+          
+          return new Response($jsonObject, 200, ['Content-Type' => 'application/json']); 
     }
 
     /**
