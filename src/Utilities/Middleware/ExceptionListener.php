@@ -24,7 +24,7 @@ class ExceptionListener
         // You get the exception object from the received event
         $exception = $event->getThrowable();
         
-        if( json_decode($exception->__toString()) == NULL ){
+        if( json_decode($exception->__toString()) == NULL ){ //Se controla si el error se trata de un servicio o no.
             $arrayErrorResponse = [ 
                 "message" => $exception->getMessage(),
                 "trace" => explode ( "\n" , $exception->getTraceAsString() )
