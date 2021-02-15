@@ -6,6 +6,7 @@ use App\Entity\Alumno;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Error;
 
 /**
  * @method Alumno|null find($id, $lockMode = null, $lockVersion = null)
@@ -27,8 +28,12 @@ class AlumnoRepository extends ServiceEntityRepository
 
     public function createAlumno($alumno)
     {      
-        $this->entityManagerInterface->persist($alumno);
-        $this->entityManagerInterface->flush($alumno);
+        try{
+            $this->entityManagerInterface->persist($alumno);
+            $this->entityManagerInterface->flush($alumno);
+            }catch(\Throwable $th){
+              throw new Error("Error al persistir en la base de datos" . $th->getMessage());
+               }
 
     }
 
@@ -79,14 +84,22 @@ class AlumnoRepository extends ServiceEntityRepository
     }*/
 
     public function deleteAlumno($alumno)
-    {
+    {   try{
         $this->entityManagerInterface->remove($alumno);
         $this->entityManagerInterface->flush();
+        }catch(\Throwable $th){
+              throw new Error("Error al intentar borrar el registro de la base de datos," . $th->getMessage());
+             }
     }
 
     public function editAlumno($alumnoBd)
     {
-        $this->entityManagerInterface->flush($alumnoBd);
+        try{
+
+            $this->entityManagerInterface->flush($alumnoBd);
+        }catch(\Throwable $th){
+            throw new Error("Error al intentar actualizar el registro de la base de detos." . $th->getMessage());
+        }
     }
     
 }

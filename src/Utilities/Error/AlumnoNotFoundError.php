@@ -4,7 +4,7 @@ namespace App\Utilities\Error;
 
 use Error;
 
-class DevilLegajoError extends Error{
+class AlumnoNotFoundError extends Error{
     /**
      * @var int
      */
@@ -12,8 +12,8 @@ class DevilLegajoError extends Error{
 
     public function __construct()
     {
-        parent::__construct("Error, tu legajo le pertenece al diablo!",101);
-        $this->id = 2;
+        parent::__construct("Error, Alumno no encontrado en bd!",102);
+        $this->id = 3;
     }
 
     public function getId():int{

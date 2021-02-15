@@ -21,7 +21,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer; //Lo uso para pr
 class AlumnoController extends AbstractController
 {
     /**
-     * @Route("/createAlumno", name="alumno",methods={"POST"})
+     * @Route("/alumnos/create", name="alumno",methods={"POST"})
      */
     public function createAlumno(Request $request, 
     SerializerInterface $serializer, 
@@ -44,9 +44,9 @@ class AlumnoController extends AbstractController
            throw new Exception("Ha ocurrido un error, logica de datos JSON invalido: " . (string) $errors);
         }
 
-        (int) $id = $alumnoService->createAlumno($alumno);//llamo al servicio 
+        $alumnoService->createAlumno($alumno);//llamo al servicio 
         
-        return new JsonResponse($id);//envio respuesta
+        return new JsonResponse($data,200, [], true);//envio respuesta
     }
     
     /**
@@ -80,13 +80,13 @@ class AlumnoController extends AbstractController
     }
 
     /**
-     * @Route("/alumno/{id}", methods={"GET"})
+     * @Route("/alumno/{id_alumno}", methods={"GET"})
      */
-    public function getAlumno(AlumnoService $alumnoService, int $id, LoggerInterface $logger,SerializerInterface $serializer)
+    public function getAlumno(AlumnoService $alumnoService, int $id_alumno, LoggerInterface $logger,SerializerInterface $serializer)
     {
            $logger->info("Estoy en getAlumno!!!");
 
-           $alumno = $alumnoService->getAlumno($id);
+           $alumno = $alumnoService->getAlumno($id_alumno);
 
         //    $response =  $this->json($alumno, 200, [], [
         //     AbstractNormalizer::IGNORED_ATTRIBUTES => ['__initializer__', '__cloner__', '__isInitialized__'],
@@ -115,7 +115,7 @@ class AlumnoController extends AbstractController
 
         $alumnoService->deleteAlumno($id_alumno);
         
-        return new JsonResponse($id_alumno);
+        return new JsonResponse();
 
     }
 

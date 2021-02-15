@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Repository\AlumnoRepository;
+use App\Utilities\Error\AlumnoNotFoundError;
 use App\Utilities\Error\DevilLegajoError;
 use App\Utilities\Error\TrollNameError;
 use Psr\Log\LoggerInterface;
@@ -56,13 +57,19 @@ class AlumnoService{
     public function getAlumnos()
     {
         $alumnos = $this->alumnoRepository->getAlumnos();
-
+        
+        if(!$alumnos)
+        throw new AlumnoNotFoundError();
+        
         return $alumnos;
     }
 
     public function getAlumno($id)
     {
         $alumno = $this->alumnoRepository->getAlumnoById($id);
+
+        if(!$alumno)
+           throw new AlumnoNotFoundError();
 
         return $alumno;
     }
@@ -72,6 +79,7 @@ class AlumnoService{
         $alumno = $this->getAlumno($id_alumno);
         $this->alumnoRepository->deleteAlumno($alumno);
     }
+    
     public function editAlumno($alumno,$alumnoBd)
     {
         $alumnoBd->setName($alumno->getName());

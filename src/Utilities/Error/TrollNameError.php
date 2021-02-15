@@ -12,7 +12,7 @@ class TrollNameError extends Error{
 
     public function __construct()
     {
-        parent::__construct("Error, no trollees crack!!!!",300);
+        parent::__construct("Error, no trollees crack!!!!",100);
         $this->id = 1;
     }
 
