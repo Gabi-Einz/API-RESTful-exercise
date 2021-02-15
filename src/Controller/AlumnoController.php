@@ -17,6 +17,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\Alumno; //SOLUCION SEEEEEEEEEE
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer; //Lo uso para preparar la respuesta del GET al cliente
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class AlumnoController extends AbstractController
 {
@@ -151,4 +152,19 @@ class AlumnoController extends AbstractController
         return new JsonResponse($id);
 
     }
+
+    /**
+     * @Route("alumnos/api", methods={"POST"})
+     */
+    public function apiInsertPerson(HttpClientInterface $httpClientInterface, Request $request)
+        {
+             $response = $httpClientInterface->request("POST", "https://reclutamiento-14cf7.firebaseio.com/personas.json",[
+                'body' => $request->getContent()
+            ]);
+             $vector = [$response->getStatusCode(), $response->getContent()];
+             var_dump($vector);
+
+             return new Response();  
+             //return $response;    
+         }
 }
